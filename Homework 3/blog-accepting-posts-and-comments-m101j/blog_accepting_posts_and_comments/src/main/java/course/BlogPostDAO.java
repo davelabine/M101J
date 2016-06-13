@@ -7,6 +7,8 @@ import com.mongodb.client.model.Updates;
 import org.bson.Document;
 
 import java.util.List;
+import java.util.Arrays;
+import java.util.Date;
 
 public class BlogPostDAO {
     MongoCollection<Document> postsCollection;
@@ -63,30 +65,11 @@ public class BlogPostDAO {
                 .append("body", body)
                 .append("permalink", permalink)
                 .append("tags", tags)
-                .append("comments", "");
-
-
-         //       .append(Updates.currentDate("date"));
+                .append("comments", Arrays.asList())
+                .append("date", new Date());
 
         postsCollection.insertOne(post);
-
-        /*
-        {
-            "_id" : ObjectId("513d396da0ee6e58987bae74"),
-                "title" : "Martians to use MongoDB",
-                "author" : "andrew",
-                "body" : "Representatives from the planet Mars announced today that the planet would adopt MongoDB as a planetary standard. Head Martian Flipblip said that MongoDB was the perfect tool to store the diversity of life that exists on Mars.",
-                "permalink" : "martians_to_use_mongodb",
-                "tags" : [
-            "martians",
-                    "seti",
-                    "nosql",
-                    "worlddomination"
-            ],
-            "comments" : [ ],
-            "date" : ISODate("2013-03-11T01:54:53.692Z")
-        }
-        */
+        
         return permalink;
     }
 
