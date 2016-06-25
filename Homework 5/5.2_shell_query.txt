@@ -1,0 +1,46 @@
+// Tried this, doesn't seem to be aggregating cities with multiple zips correctly
+> db.zips.aggregate([{$match:{ pop:{$gt:25000}, $or: [{state:"NY"}, {state:"CA"}] } }, {$group:{_id:"CA_NY", avg_pop:{$avg:"$pop"}}} ])
+{ "_id" : "CA_NY", "avg_pop" : 41485.69565217391 }
+> db.zips.aggregate([{$match:{ pop:{$gt:25000}, $or: [{state:"NJ"}, {state:"CT"}] } }, {$group:{_id:"CA_NY", avg_pop:{$avg:"$pop"}}} ])
+{ "_id" : "CA_NY", "avg_pop" : 36369.36363636364 }
+
+// Try to find out how many cities have multiple zips and aggregate them
+db.zips.aggregate([
+	{$match:
+	 {  
+	 	$or: [{state:"NY"}, {state:"CA"}] 
+	 }
+	},
+	{$group:
+	 {
+	 	_id:{ state:"$state", city:"$city" },
+	 	sum_pop:{$sum:"$pop"},
+	 	zips:{$push:"$_id"}
+	 }
+	},
+	{$sort:{_id:1}
+	}
+])
+
+// Now average those cities, don't forget to match for cities with pops > 25,000!
+db.zips.aggregate([
+	{$match:
+	 {  
+	 	$or: [{state:"NY"}, {state:"CA"}] 
+	 }
+	},
+	{$group:
+	 {
+	 	_id:{ state:"$state", city:"$city" },
+	 	sum_pop:{$sum:"$pop"},
+	 	zips:{$push:"$_id"}
+	 }
+	},
+	{$match:{sum_pop:{$gt:25000}}},
+	{$group:
+	 {
+		_id:"Answer",
+		avg_pop:{$avg:"$sum_pop"}
+	 }
+	}
+])
