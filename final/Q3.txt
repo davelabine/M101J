@@ -1,0 +1,15 @@
+// Please add the email address "mrpotatohead@mongodb.com" to the list of addresses in the "headers.To" array for the document 
+// with "headers.Message-ID" of "<8147308.1075851042335.JavaMail.evans@thyme>"
+
+// Start by finding the doc and taking a look...
+db.messages.find({"headers.Message-ID" : "<8147308.1075851042335.JavaMail.evans@thyme>"}).pretty()
+
+// Confirms there is only one document to update.  By default this will add to existing fields, no need to upsert.
+
+// Now upsert.  Not working, why?
+db.collection.update({"headers.Message-ID" : "<8147308.1075851042335.JavaMail.evans@thyme>"}, {
+  $addToSet: {
+    "headers.To":"mrpotatohead@mongodb.com" 
+  }
+})
+
