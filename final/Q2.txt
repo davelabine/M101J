@@ -1,0 +1,29 @@
+// Use the aggregation framework to figure out pairs of people that tend to communicate a lot.
+// Tricky: a recipient may appear multiple times in To:, for a message, don't count them twice.
+
+// Assume it isn't tricky, how would we solve?
+db.messages.aggregate([
+	{$unwind:"$headers.To"},
+	{$group:
+	 {
+	 	_id:{from:"$headers.From", to:"$headers.To"},
+	 	msg: {$_id}
+	 	total: {$sum:1}
+	 }
+	},
+	{$group:
+	 {
+	 	_id:{$msg}
+	 }
+	}
+	{$sort:{total:-1}}
+])
+
+// When we unwind, we will see repeats like this that we need to eliminate, 
+// we only want to count them once.
+// id: 1, from: a, to: b
+// id: 1, from: a, to: b
+// id: 2, from: a, to: b
+// When we do this the previous _id is no longer unique.
+// Hm, first eliminate message duplicates, THEN count.  group on ID first, THEN count on from | to
+// Seems kind of redundant, why can't we do in first pass?

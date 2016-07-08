@@ -1,0 +1,19 @@
+
+// Construct a query to calculate the number of messages sent by Andrew Fastow, CFO, to Jeff Skilling, 
+// the president. Andrew Fastow's email addess was andrew.fastow@enron.com. Jeff Skilling's email was 
+// jeff.skilling@enron.com.
+//
+// For reference, the number of email messages from Andrew Fastow to John Lavorato 
+// (john.lavorato@enron.com) was 1.
+//
+// Try to find messages sent by Andrew Fastow
+db.messages.find({"headers.From":"andrew.fastow@enron.com","headers.To":"jeff.skilling@enron.com"})
+
+// This works, and checks out for john.lavorato.
+// But could we be messing up the array query?  Results show "To" only contains one message, looks suspicious.
+// Try finding a message known to have multiple addresses in the To array.
+db.messages.find({"headers.To":"jim.schwieger@enron.com"})
+
+// This returned any match on the To: array.  We should be good.  As a double check look for jeff's To mails.
+// Looks like he is on the To: for many other messages.
+db.messages.find({"headers.To":"jeff.skilling@enron.com"})
