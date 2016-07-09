@@ -102,5 +102,11 @@ public class BlogPostDAO {
         // on the post identified by `permalink`.
         //
         //
+        // Something like
+        // db.collection.update({_id:'adsjfdsau7Hukad'},{$inc:{'nested.2.c':1}})
+
+        postsCollection.updateOne(eq("permalink", permalink),
+                new Document("$inc", new Document("comments." + ordinal + ".num_likes", 1)));
+
     }
 }
