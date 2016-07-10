@@ -1,0 +1,23 @@
+We need to decide on a shard key to shard the record collection. What's the best shard key for the record collection, provided that we are willing to run inefficient scatter-gather operations to do infrequent research and run studies on various diseases and cohorts? That is, think mostly about the operational aspects of such a system. And by operational, we mean, think about what the most common operations that this systems needs to perform day in and day out.
+
+// Well, day in and day out operations will likely be on single patients, modifying their records.
+// For these queries the best shard key would keep all records related to a single patient on the same shard.
+// That way most queries can be resolved by mongos using a single shared and no inefficient scatter-gather
+
+// No. Monotonically increasing, creates hotspotting, all write traffic will be handled by a single node
+// For all people in the US?  Not likely.
+Date and time when medical record was created
+
+// No, isn't this stored in the patient collection? 
+// Probably not enough cardinality, hotspotting with common last names.
+Patient last name
+
+patient_id
+_id
+
+// No, isn't this stored in the patient collection? 
+// Probably not enough cardinality, hotspotting with common names.
+Patient first name
+
+
+Primary care physician (your principal doctor that handles everyday problems)
