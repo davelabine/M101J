@@ -1,0 +1,14 @@
+Check below all the statements that are true about the way MongoDB handled this query.
+
+// Yes, I don't see an in memory sort, and I do see an IXSCAN, so mongo pulled
+// query results in sorted order.
+The query avoided sorting the documents because it was able to use an index's ordering.
+
+// No, this is how many it examined.
+The query returned 120,477 documents.
+
+// No, it pulled them in sorted order, then used FETCH to satisfy find criteria
+The query used an index to figure out which documents match the find criteria.
+
+// No, the output would show a COLSCAN if this happened.
+The query scanned every document in the collection.
