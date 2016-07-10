@@ -12,12 +12,17 @@ Date and time when medical record was created
 // Probably not enough cardinality, hotspotting with common last names.
 Patient last name
 
+// Possibly, this would group records for each patient on a single shard to distribute the load. 
+// Also, doesn't change.
 patient_id
+
+// No, the _id for each record is essentially random.  A common query to pull a single patient's records
+// would be scatter gather.
 _id
 
 // No, isn't this stored in the patient collection? 
 // Probably not enough cardinality, hotspotting with common names.
 Patient first name
 
-
+// No. This can change, and it is difficult to change shard key after the fact.
 Primary care physician (your principal doctor that handles everyday problems)

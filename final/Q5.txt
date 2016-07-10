@@ -1,0 +1,20 @@
+Now suppose you want to run the following query against the collection.
+db.stuff.find({'a':{'$lt':10000}, 'b':{'$gt': 5000}}, {'a':1, 'c':1}).sort({'c':-1})
+Which of the indexes could be used by MongoDB to assist in answering the query? Check all that apply.
+
+// Note: the second parameter to find () is a projection and has no bearing on indexes used.
+
+// Yes, a and b for their respective range queries, then pull the c records in sorted order
+a_1_b_1_c_-1
+
+// Yes, for the range queries only.
+a_1_b_1
+
+// No, we're not doing queries on ID
+_id_
+
+// Partially.  Could use only the a portion of the query to help.
+a_1_c_1
+
+// Yes, for sorting the result.
+c_1
