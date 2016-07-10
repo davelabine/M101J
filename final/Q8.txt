@@ -1,0 +1,22 @@
+public class InsertTest {
+        public static void main(String[] args) {
+            MongoClient c =  new MongoClient();
+            MongoDatabase db = c.getDatabase("test");
+            MongoCollection<Document> animals = db.getCollection("animals");
+
+           Document animal = new Document("animal", "monkey");
+
+            animals.insertOne(animal);
+            animal.remove("animal");
+            animal.append("animal", "cat");
+            animals.insertOne(animal);
+            animal.remove("animal");
+            animal.append("animal", "lion");
+            animals.insertOne(animal);
+        }
+}
+
+// The first insertOne will fill the _id of the animal document.
+// The subsequent remove won't remove this _id
+// Appending cat is ok
+// But when InsertOne is called again it will throw a duplicate key exception 
